@@ -2,6 +2,7 @@ from fastapi import APIRouter
 from pydantic import BaseModel
 
 from LangChain.search_agent import search_wiht_tavily, search_with_agent
+from LangChain.today_search_agent import search_with_today_agent
 
 router = APIRouter()
 
@@ -23,3 +24,11 @@ async def search(body: message):
     :body: 쿼리
     """
     return {"message": "Search results", "data": search_with_agent(body.message)}
+
+@router.post("/search-agent-today")
+async def search(body: message):
+    """
+    Agent 가 Tavily 도구를 사용할지 말지 구분하여 응답합니다.
+    :body: 쿼리
+    """
+    return {"message": "Search results", "data": search_with_today_agent(body.message)}
