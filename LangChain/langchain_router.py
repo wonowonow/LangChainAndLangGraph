@@ -1,8 +1,10 @@
 from fastapi import APIRouter
 from pydantic import BaseModel
+from fastapi import UploadFile, File
 
 from LangChain.search_agent import search_wiht_tavily, search_with_agent
 from LangChain.today_search_agent import search_with_today_agent
+from LangChain.pdf_to_json_agent import pdf_to_json_agent
 
 router = APIRouter()
 
@@ -32,3 +34,13 @@ async def search(body: message):
     :body: 쿼리
     """
     return {"message": "Search results", "data": search_with_today_agent(body.message)}
+
+@router.post("/pdf-to-json")
+async def pdf_to_json(pdf: UploadFile = File(...)):
+    """
+    Agent 가 이력서 PDF 를 JSON 으로 변환합니다.
+    :body: pdf
+    """
+    
+    content = await pdf.read()
+    return {"message": "results", "data": pdf_to_json_agent(content)}
